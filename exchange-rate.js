@@ -15,20 +15,24 @@ export async function fetchExchangeRates() {
 
     const btcUsd = tickers?.find((t) => t.symbol === 'BTC-USD');
     const btcEur = tickers?.find((t) => t.symbol === 'BTC-EUR');
+    const eurUsd = tickers?.find((t) => t.symbol === 'EUR-USD');
 
-    if (!btcUsd || !btcEur) {
+    if (!btcUsd || !btcEur || !eurUsd) {
       throw new Error('Required trading pairs not found.');
     }
 
     const rates = {
+      // Dollar conversions
       dollarToBitcoin: 1 / btcUsd.price_24h,
-      dollarToEur: btcUsd.price_24h / btcEur.price_24h,
+      dollarToEur: 1 / eurUsd.price_24h,
 
+      // Bitcoin conversions
       bitcoinToDollar: btcUsd.price_24h,
       bitcoinToEur: btcEur.price_24h,
 
+      // Euro conversions
       eurToBitcoin: 1 / btcEur.price_24h,
-      eurToDollar: btcEur.price_24h / btcUsd.price_24h,
+      eurToDollar: eurUsd.price_24h,
     };
 
     return { success: true, data: rates, error: null };
